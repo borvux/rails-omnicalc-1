@@ -24,6 +24,21 @@ class OmniController < ApplicationController
   end
 
   def payment_result
+    @user_apr = params.fetch("user_apr").to_f
+    @user_years = params.fetch("user_years")
+    @user_principal = params.fetch("user_principal").to_f
+
+    @r = (@user_apr / 100) / 12
+    @n = @user_years.to_i * 12
+
+    @numerator = @r * @user_principal
+    @denominator = 1 - ((1 + @r) ** -@n)
+
+    @payment = @numerator / @denominator
+
+    @fromatted_apr = "#{"%.4f" % @user_apr}%"
+    @fromatted_principal = format("%.2f", @user_principal).reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+    @formatted_payment = format("%.2f", @payment).reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
     render(template: "templates/payment_result")
   end
 
@@ -32,6 +47,9 @@ class OmniController < ApplicationController
   end
 
   def random_result
+    @user_min = params.fetch("user_min").to_f
+    @user_max = params.fetch("user_max").to_f
+    @random_number = rand(@user_min..@user_max)
     render(template: "templates/random_result")
   end
 end
