@@ -14,6 +14,8 @@ class OmniController < ApplicationController
   end
 
   def square_root_result
+    @user_input_square = params.fetch("square_root_number")
+    @square_root = Math.sqrt(@user_input_square.to_f)
     render(template: "templates/square_root_result")
   end
 
